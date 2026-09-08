@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In - Pet Adoption Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Pet Adoption Center</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#paNavbarContent" aria-controls="paNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="paNavbarContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/pets}">Browse Pets</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/store}">Shop</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/store/cart}">🛒 Cart</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" th:href="@{/signup}">Sign Up</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Welcome Back</h4>
+                </div>
+                <div class="card-body p-4">
+
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        Invalid email or password.
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-info">
+                        You have been logged out successfully.
+                    </div>
+                    <div th:if="${param.registered}" class="alert alert-success">
+                        Registration successful! Please log in.
+                    </div>
+
+                    <form th:action="@{/signin}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <div class="alert alert-info mb-3">
+                            <small class="fw-bold">Demo Credentials (Click to auto-fill):</small><br>
+                            <a href="#" onclick="fillCredentials('admin@email.com', 'admin123'); return false;" class="text-decoration-none">
+                                <small>🔑 Admin: admin@email.com / admin123</small>
+                            </a><br>
+                            <a href="#" onclick="fillCredentials('user@email.com', 'user123'); return false;" class="text-decoration-none">
+                                <small>👤 User: user@email.com / user123</small>
+                            </a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Log In</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a th:href="@{/signup}">Don't have an account? Sign up.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillCredentials(email, password) {
+    document.getElementById('username').value = email;
+    document.getElementById('password').value = password;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

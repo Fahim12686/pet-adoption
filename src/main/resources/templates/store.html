@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop - Pet Adoption Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Pet Adoption Center</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#paNavbarContent" aria-controls="paNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="paNavbarContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/pets}">Browse Pets</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/store}">Shop</a></li>
+                <li class="nav-item">
+                    <a class="nav-link position-relative" th:href="@{/store/cart}">
+                        🛒 Cart
+                        <span th:if="${cartItemCount > 0}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-accent"
+                              th:text="${cartItemCount}">0</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="pa-page-header mb-4">
+        <h2 class="mb-1">Pet Essentials Store</h2>
+        <p class="text-secondary mb-0">Food, toys, and accessories for your new companion. All items ship within 2-3 business days.</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="item : ${items}">
+            <div class="card h-100">
+                <img th:if="${item.imageUrl != null and !item.imageUrl.isEmpty()}"
+                     th:src="${item.imageUrl}" class="card-img-top" th:alt="${item.name}"
+                     style="height:200px;object-fit:cover;">
+                <div th:unless="${item.imageUrl != null and !item.imageUrl.isEmpty()}"
+                     class="card-img-top pa-no-photo"
+                     style="height:200px;">
+                    <span>🛍️</span>
+                    <small>No Photo Yet</small>
+                </div>
+                <div class="card-body">
+                    <span class="badge bg-light text-dark border mb-2" th:text="${item.category}">Category</span>
+                    <h5 class="card-title" th:text="${item.name}">Item Name</h5>
+                    <p class="card-text text-muted small" th:text="${item.description}">Description</p>
+                    <p class="card-text fw-bold fs-5 text-primary" th:text="'$' + ${item.price}">$0.00</p>
+                    <p class="card-text small" th:if="${item.stockQty > 0}">
+                        <span class="text-success">In stock</span> (<span th:text="${item.stockQty}"></span> left)
+                    </p>
+                    <p class="card-text small text-danger" th:if="${item.stockQty == 0}">Out of stock</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <form th:action="@{/store/cart/add/{itemId}(itemId=${item.id})}" method="post">
+                        <button type="submit" class="btn btn-accent w-100" th:disabled="${item.stockQty == 0}">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(items)}" class="alert alert-info">
+        No items are currently available in the store. Please check back later!
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Payment - Pet Adoption Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div th:if="${error}" class="alert alert-danger mb-4" th:text="${error}"></div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Complete Your Adoption</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h5 class="text-muted">Adoption Fee for <span th:text="${application.pet.name}">Pet</span></h5>
+                        <h2 class="display-5 fw-bold text-success">$<span th:text="${application.pet.adoptionFee}">0.00</span></h2>
+                    </div>
+
+                    <form th:action="@{/payment/process}" th:object="${paymentRequest}" method="post">
+                        <input type="hidden" th:field="*{applicationId}" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Card Number (16 Digits)</label>
+                            <input type="text" class="form-control" th:field="*{cardNumber}" placeholder="1234567890123456" maxlength="16" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" th:field="*{expiry}" placeholder="MM/YY" maxlength="5" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('expiry')}" th:errors="*{expiry}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" th:field="*{cvv}" placeholder="123" maxlength="4" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('cvv')}" th:errors="*{cvv}"></div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Submit Payment</button>
+                            <a th:href="@{/dashboard}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/admin/dashboard}">Admin Panel</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#paNavbarContent" aria-controls="paNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="paNavbarContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/pets}">Manage Pets</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/applications}">Applications</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">Users</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/store}">Manage Store</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/sales}">Sold Items</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="pa-page-header mb-4"><h2 class="mb-0">Review</h2></div>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                <thead class="pa-table-head">
+                <tr>
+                    <th>Applicant</th>
+                    <th>Pet</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${applications}">
+                    <td>
+                        <strong th:text="${app.user.name}">Name</strong><br>
+                        <small class="text-muted" th:text="${app.user.email}">Email</small>
+                    </td>
+                    <td>
+                        <a th:href="@{/pets/{id}(id=${app.pet.id})}" th:text="${app.pet.name}">Pet</a>
+                    </td>
+                    <td><small th:text="${app.reason}">Reason text...</small></td>
+                    <td>
+                        <span class="badge bg-warning text-dark" th:if="${app.status == 'PENDING'}">Pending</span>
+                        <span class="badge bg-success" th:if="${app.status == 'APPROVED'}">Approved</span>
+                        <span class="badge bg-danger" th:if="${app.status == 'REJECTED'}">Rejected</span>
+                        <span class="badge bg-info text-dark" th:if="${app.status == 'COMPLETED'}">Completed</span>
+                    </td>
+                    <td>
+                        <div th:if="${app.status == 'PENDING'}" class="d-flex gap-2">
+                            <form th:action="@{/admin/applications/{id}/approve(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            </form>
+                            <form th:action="@{/admin/applications/{id}/reject(id=${app.id})}" method="post">
+                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                            </form>
+                        </div>
+                        <span th:unless="${app.status == 'PENDING'}" class="text-muted">Processed</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
